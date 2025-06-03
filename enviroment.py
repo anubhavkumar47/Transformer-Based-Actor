@@ -145,9 +145,10 @@ class Environment:
         if R_sec[selected_iotd] > self.R_min and delta[selected_iotd] > 0.5:
             # Successful transmission - reset AoI and update reward
             r_A = - 0.1*self.AoI[selected_iotd]  # Negative of AoI as in paper
-            self.AoI[selected_iotd] = 0
-            # Update energy level for the IoTD
+             # Update energy level for the IoTD
             self.A += self.AoI[selected_iotd]
+            self.AoI[selected_iotd] = 0
+           
             self.energy_levels[selected_iotd] = max(0, self.energy_levels[selected_iotd] - 0.1)
 
         # Calculate total reward according to paper's formula: r_t = r^A(t) + r^E(t) + r^P(t)
