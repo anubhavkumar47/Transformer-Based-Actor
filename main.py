@@ -54,11 +54,8 @@ for episode in range(episodes):
     ep_actor=0
     ep_critic=0
 
-    # linearly decay epsilon
-    epsilon = max(
-        epsilon_end,
-        epsilon_start - (episode / epsilon_decay) * (epsilon_start - epsilon_end)
-    )
+   
+    epsilon = epsilon_end+(epsilon_start-epsilon_end)*math.exp(-1.0 * episode/30)
 
     for step in range(max_steps):
         # ε-greedy action:
@@ -88,7 +85,7 @@ for episode in range(episodes):
 
 
         # train once buffer has enough samples
-        if len(replay_buffer) >= batch_size:
+        if len(replay_buffer) >= batch_size*5:
             info_dict =agent.train(replay_buffer, batch_size)
             ep_critic +=info_dict["critic_loss"]
             if info_dict["actor_loss"] is None :
@@ -109,19 +106,8 @@ for episode in range(episodes):
     actor_losses.append(ep_actor/max_steps)
     aoi_list.append(ep_aoi)
     total_episode.append(episode)
-    print(f"Ep {episode+1:3d} | Avg Reward: {ep_reward/max_steps:8.2f} | ε = {epsilon:.3f}")
+    print(f"Ep {episode+1:3d} | Avg Reward: {ep_reward/max_steps:8.2f} | epsilon = {epsilon:.3f}   | Avg Critic Loss {ep_critic/max_steps:.2f}  |  Avg Actor Loss {ep_actor/max_steps:.2f}")
     print("--------------------------------------------------------------------------------------------------------------------")
-
-# ==== Save models & logs ====
-#os.makedirs("checkpoints", exist_ok=True)
-#torch.save(agent.actor.state_dict(),  "checkpoints/actor.pth")
-#torch.save(agent.critic.state_dict(), "checkpoints/critic.pth")
-print("Episode",total_episode)
-print("Rewards",episode_rewards)
-print("Actor Loss",actor_losses)
-print("critic_losses",critic_losses)
-print("energy_consumption",energy_consumption)
-print("aoi_list",aoi_list)
 
 pd.DataFrame({
     "Episode": total_episode,
@@ -133,4 +119,4 @@ pd.DataFrame({
 
 }).to_csv("training_transfomer_log.csv", index=False)
 
-print("Training complete. Logs in training_mlp_log.csv")
+
