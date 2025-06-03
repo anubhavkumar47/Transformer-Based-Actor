@@ -28,7 +28,7 @@ agent = TD3(
 replay_buffer = ReplayBuffer(state_dim, action_dim)
 
 # ==== Training settings ====
-episodes          = 10000
+episodes          = 6000
 max_steps         = 150
 batch_size        = 512
 epsilon_start     = 1.0     # start fully random
