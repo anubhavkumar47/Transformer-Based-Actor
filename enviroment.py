@@ -115,10 +115,10 @@ class Environment:
             out_of_bounds = True
 
         if out_of_bounds:
-            r_P = -1  # Large penalty for going out of bounds
+            r_P -= 9  # Large penalty for going out of bounds
 
         else :
-            r_P =0
+            r_P +=9
 
         # Update positions
         past_position_A = self.current_position_A
@@ -145,6 +145,7 @@ class Environment:
         if R_sec[selected_iotd] > self.R_min and delta[selected_iotd] > 0.5:
             # Successful transmission - reset AoI and update reward
             r_A = - 0.1*self.AoI[selected_iotd]  # Negative of AoI as in paper
+            r_P +=9
              # Update energy level for the IoTD
             self.A += self.AoI[selected_iotd]
             self.AoI[selected_iotd] = 0
